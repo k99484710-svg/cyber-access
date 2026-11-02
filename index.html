@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CYBER ACCESS</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;
+ display:flex;align-items:center;justify-content:center;
+ background:#020805;color:#00ff88;
+ font-family:monospace;overflow:hidden;
+}
+canvas{position:fixed;inset:0;pointer-events:none}
+.card{
+ position:relative;z-index:2;width:90%;max-width:390px;
+ padding:30px 22px;text-align:center;
+ background:#00150bee;border:1px solid #00ff88;
+ border-radius:16px;
+ box-shadow:0 0 35px #00ff8866;
+ animation:show 1s ease;
+}
+.logo{font-size:60px;text-shadow:0 0 25px #00ff88}
+h1{letter-spacing:4px}
+input{
+ width:100%;padding:15px;margin:20px 0;
+ background:#001008;color:#00ff88;
+ border:1px solid #00ff88;border-radius:7px;
+ text-align:center;font-size:22px;
+}
+button{
+ width:100%;padding:14px;background:#00ff88;
+ color:#001408;border:0;border-radius:7px;
+ font-weight:bold;font-size:16px;
+}
+#message{color:#ff4545}
+#photo{display:none}
+img{
+ width:100%;margin-top:15px;
+ border-radius:10px;border:1px solid #00ff88;
+}
+.status{font-size:11px;letter-spacing:2px}
+@keyframes show{
+ from{opacity:0;transform:translateY(20px)}
+ to{opacity:1;transform:translateY(0)}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="card" id="login">
+ <div class="logo">◈</div>
+ <h1>CYBER ACCESS</h1>
+ <p class="status">[ SYSTEM PROTECTED ]</p>
+ <p>ВВЕДИТЕ ПАРОЛЬ</p>
+ <input id="pass" type="password"
+ maxlength="6" inputmode="numeric"
+ placeholder="••••••">
+ <button onclick="unlock()">UNLOCK</button>
+ <p id="message"></p>
+ <p class="status">SECURE SYSTEM v2.0</p>
+</div>
+
+<div class="card" id="photo">
+ <div class="logo">◈</div>
+ <h1>ACCESS GRANTED</h1>
+ <p class="status">[ CONNECTION ESTABLISHED ]</p>
+ <img src="IMG_194a33e5-bd47-4565-b4bb-b350298aaeb6.png"
+ alt="Моя фотография">
+</div>
+
+<script>
+function unlock(){
+ const p=document.getElementById("pass");
+ if(p.value==="671488"){
+  document.getElementById("login").style.display="none";
+  document.getElementById("photo").style.display="block";
+ }else{
+  document.getElementById("message").textContent="ACCESS DENIED";
+  p.value="";
+ }
+}
+
+document.getElementById("pass").addEventListener("keydown",e=>{
+ if(e.key==="Enter")unlock();
+});
+
+const c=document.getElementById("particles");
+const ctx=c.getContext("2d");
+let dots=[];
+function resize(){
+ c.width=innerWidth;c.height=innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+for(let i=0;i<65;i++){
+ dots.push({
+  x:Math.random()*c.width,
+  y:Math.random()*c.height,
+  s:Math.random()*2+1,
+  v:Math.random()*0.8+0.2
+ });
+}
+function animate(){
+ ctx.clearRect(0,0,c.width,c.height);
+ dots.forEach(d=>{
+  d.y-=d.v;
+  if(d.y<0){d.y=c.height;d.x=Math.random()*c.width}
+  ctx.beginPath();
+  ctx.arc(d.x,d.y,d.s,0,Math.PI*2);
+  ctx.fillStyle="#00ff88";
+  ctx.shadowBlur=12;
+  ctx.shadowColor="#00ff88";
+  ctx.fill();
+ });
+ requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>
