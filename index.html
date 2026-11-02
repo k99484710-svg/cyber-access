@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CYBER ACCESS</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #020805;
+  color: #00ff88;
+  font-family: monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 390px;
+  padding: 30px 22px;
+  text-align: center;
+  background: rgba(0, 20, 10, .88);
+  border: 1px solid #00ff88;
+  border-radius: 15px;
+  box-shadow: 0 0 25px #00ff8844,
+              inset 0 0 20px #00ff8811;
+  animation: enter 1s ease;
+}
+
+.logo {
+  font-size: 55px;
+  text-shadow: 0 0 20px #00ff88;
+  animation: pulse 2s infinite;
+}
+
+h1 {
+  font-size: 25px;
+  letter-spacing: 4px;
+  text-shadow: 0 0 12px #00ff88;
+}
+
+.status {
+  font-size: 11px;
+  color: #55bb88;
+  letter-spacing: 2px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin: 20px 0 12px;
+  background: #00150b;
+  border: 1px solid #00ff88;
+  border-radius: 7px;
+  outline: none;
+  color: #00ff88;
+  text-align: center;
+  font-size: 22px;
+  letter-spacing: 7px;
+}
+
+input::placeholder {
+  color: #387d59;
+  letter-spacing: 3px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #00ff88;
+  border: none;
+  border-radius: 6px;
+  color: #001408;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 3px;
+  cursor: pointer;
+  box-shadow: 0 0 18px #00ff8877;
+}
+
+button:active {
+  transform: scale(.97);
+}
+
+#message {
+  min-height: 18px;
+  color: #ff4545;
+  font-size: 13px;
+}
+
+#videoScreen {
+  display: none;
+}
+
+video {
+  width: 100%;
+  border: 1px solid #00ff88;
+  border-radius: 8px;
+  margin-top: 15px;
+  background: black;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: .55; }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shake {
+  animation: shake .3s;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="container" id="login">
+  <div class="logo">◈</div>
+
+  <h1>CYBER ACCESS</h1>
+
+  <p class="status">[ SYSTEM PROTECTED ]</p>
+  <p>ВВЕДИТЕ КОД ДОСТУПА</p>
+
+  <input
+    id="password"
+    type="password"
+    maxlength="6"
+    inputmode="numeric"
+    placeholder="••••••"
+  >
+
+  <button onclick="unlock()">ACCESS</button>
+
+  <p id="message"></p>
+
+  <p class="status">SECURE SYSTEM v1.0</p>
+</div>
+
+<div class="container" id="videoScreen">
+  <div class="logo">◈</div>
+
+  <h1>ACCESS GRANTED</h1>
+
+  <p class="status">[ CONNECTION ESTABLISHED ]</p>
+
+  <video id="player" controls playsinline>
+    <source src="video.mp4" type="video/mp4">
+    Ваш браузер не поддерживает видео.
+  </video>
+</div>
+
+<script>
+
+// PASSWORD SYSTEM
+
+function unlock() {
+  const input = document.getElementById("password");
+  const login = document.getElementById("login");
+  const videoScreen = document.getElementById("videoScreen");
+  const message = document.getElementById("message");
+
+  if (input.value === "671488") {
+    login.style.display = "none";
+    videoScreen.style.display = "block";
+  } else {
+    message.textContent = "ACCESS DENIED";
+    login.classList.remove("shake");
+
+    void login.offsetWidth;
+    login.classList.add("shake");
+
+    input.value = "";
+  }
+}
+
+// ENTER KEY
+
+document.getElementById("password")
+.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") unlock();
+});
+
+// PARTICLES
+
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+window.addEventListener("resize", resize);
+resize();
+
+for (let i = 0; i < 65; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 2 + 1,
+    speed: Math.random() * 0.8 + 0.2,
+    alpha: Math.random()
+  });
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach(p => {
+    p.y -= p.speed;
+
+    if (p.y < 0) {
+      p.y = canvas.height;
+      p.x = Math.random() * canvas.width;
+    }
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+    ctx.fillStyle = `rgba(0,255,130,${p.alpha})`;
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = "#00ff88";
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+</script>
+
+</body>
+  </html>
+  
