@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BANANA MATRIX</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #020805;
+  color: #00ff88;
+  font-family: monospace;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+h1 {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-top: 40px;
+  text-shadow: 0 0 20px #00ff88;
+}
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+<h1>BANANA MATRIX 🍌</h1>
+
+<script>
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+let bananas = [];
+
+function resize() {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+
+resize();
+window.addEventListener("resize", resize);
+
+for (let i = 0; i < 35; i++) {
+  bananas.push({
+    x: Math.random() * innerWidth,
+    y: Math.random() * innerHeight,
+    speed: 1 + Math.random() * 3,
+    size: 20 + Math.random() * 25,
+    rotation: Math.random() * 6
+  });
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  bananas.forEach(b => {
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(b.rotation);
+    ctx.font = b.size + "px Arial";
+    ctx.fillText("🍌", 0, 0);
+    ctx.restore();
+
+    b.y += b.speed;
+    b.rotation += 0.01;
+
+    if (b.y > canvas.height + 40) {
+      b.y = -40;
+      b.x = Math.random() * canvas.width;
+    }
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
